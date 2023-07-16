@@ -10,7 +10,7 @@ use tauri::api::path::home_dir;
 
 #[derive(Debug, Serialize, Deserialize, Default, Clone)]
 pub struct Config {
-    pub active_user_account_id: String, // Must always include valid user account id form user_accounts vector.
+    pub active_user_account_id: String, // Must always (after initial check) include valid user account id from user_accounts vector. Empty means user wants to change account.
     pub user_accounts: Vec<UserAccount>,
 }
 impl Config {
@@ -30,6 +30,7 @@ pub struct UserAccount {
     pub access_token: String,
     pub access_token_expires_at: DateTime<Local>,
     pub refresh_token: String,
+    pub profile_photo: Option<String>,
 }
 
 fn get_config_dir_path() -> PathBuf {

@@ -10,6 +10,7 @@ mod config;
 
 use std::collections::HashMap;
 
+use base64::Engine;
 use config::save_config;
 use constants::AZURE_OAUTH_DEEP_LINK_NAME;
 use tauri::Manager;
@@ -98,7 +99,6 @@ fn main() {
                         );
                         return;
                     };
-                    dbg!(&body);
                     let Ok(token) = serde_json::from_str::<AzureOAuthTokenResp>(&body) else {
                         _ = handle.emit_all(
                             "app://login-request-error",
@@ -139,7 +139,6 @@ fn main() {
                         );
                         return;
                     };
-                    dbg!(&body);
                     let Ok(user_info) = serde_json::from_str::<UserInfoGraphResponse>(&body) else {
                         _ = handle.emit_all(
                             "app://login-request-error",
@@ -149,6 +148,26 @@ fn main() {
                         );
                         return;
                     };
+                    
+                    
+                    let mut user_profile_picture: Option<String> = None;
+                    if let Ok(resp) = reqwest_client
+                        .get("https://graph.microsoft.com/v1.0/me/photo/$value")
+                        .header("Authorization", format!("Bearer {}", token.access_token)).send() 
+                        {
+                            if let Some(content_type) = resp.headers().clone().get("content-type") {
+                                if let Ok(content_type) = content_type.to_str() {
+                                    if let Ok(bytes) = resp.bytes() {
+                                        user_profile_picture = Some(
+                                            format!("data:{};base64,{}",
+                                                content_type,
+                                                base64::engine::general_purpose::STANDARD.encode(bytes)
+                                            )
+                                        );
+                                    }
+                                }
+                            }
+                        }
 
                     let mut config = get_config();
                     if let Some(position_to_delete) = config.user_accounts.iter().position(|s| s.id == user_info.id) {
@@ -161,6 +180,7 @@ fn main() {
                         access_token: token.access_token,
                         access_token_expires_at: gen_new_expiration_datetime(token.expires_in),
                         refresh_token: token.refresh_token,
+                        profile_photo: user_profile_picture,
                     };
                     config.active_user_account_id = new_user_account.id.clone();
                     config.user_accounts.push(new_user_account);
@@ -173,7 +193,13 @@ fn main() {
 
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![commands::get_login_url])
+        .invoke_handler(tauri::generate_handler![
+            commands::get_login_url, 
+            commands::initial_check, 
+            commands::get_config, 
+            commands::login_manual, 
+            commands::logout
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
