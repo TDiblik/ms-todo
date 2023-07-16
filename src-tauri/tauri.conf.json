@@ -13,7 +13,10 @@
   },
   "tauri": {
     "allowlist": {
-      "all": false
+      "all": false,
+      "shell": {
+        "open": true
+      }
     },
     "bundle": {
       "active": true,
@@ -56,8 +59,8 @@
         "focus": true,
         "decorations": true,
 
-        "width": 850,
-        "height": 750
+        "width": 950,
+        "height": 775
       }
     ]
   }

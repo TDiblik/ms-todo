@@ -1,20 +1,28 @@
-<script>
+<script lang="ts">
   import {goto} from "$app/navigation";
   import {invoke} from "@tauri-apps/api/tauri";
   import {onMount} from "svelte";
+  import {current_user_account} from "./app/user_account_store";
+  import {MessageType, push_new_message} from "./toast_store";
+  import type {Config} from "../utils/models";
 
   onMount(async () => {
-    let result = await invoke("initial_check");
-    switch (result) {
-      case "send-to-app":
-        goto("/app");
-        break;
-      case "send-to-login":
-        goto("/login");
-        break;
-      default:
-        console.log("Unable to decode sent by intial_check function.");
+    const result = await invoke("initial_check");
+    if (result == "send-to-login") {
+      goto("/login");
+      return;
     }
+    if (result != "send-to-app") {
+      push_new_message(
+        MessageType.error,
+        "Got unexpected result from initial_check function. The app will never load. Open an issue."
+      );
+      return;
+    }
+
+    const config: Config = await invoke("get_config");
+    current_user_account.set(config.user_accounts.find((s) => s.id == config.active_user_account_id)!);
+    goto("/app");
   });
 </script>
 
