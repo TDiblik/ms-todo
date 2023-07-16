@@ -1,15 +1,18 @@
-<nav>
-  <a class="link" href="/">init checks</a>
-  <a class="link" href="/login">switch account</a>
-</nav>
+<script lang="ts">
+</script>
 
-<h1 class="text-3xl text-purple-500 font-bold underline">Home</h1>
-<p>this is the home page.</p>
-
-<button class="btn">Button</button>
-<button class="btn btn-neutral">Neutral</button>
-<button class="btn btn-primary">Button</button>
-<button class="btn btn-secondary">Button</button>
-<button class="btn btn-accent">Button</button>
-<button class="btn btn-ghost">Button</button>
-<button class="btn btn-link">Button</button>
+<div class="drawer md:drawer-open">
+  <input id="sidebar" type="checkbox" class="drawer-toggle" />
+  <div class="drawer-content flex flex-col items-center justify-center">
+    <!-- Page content here -->
+    <label for="sidebar" class="btn btn-primary drawer-button md:hidden">Open drawer</label>
+  </div>
+  <div class="drawer-side">
+    <label for="sidebar" class="drawer-overlay" />
+    <ul class="menu p-4 w-60 h-full bg-base-200 text-base-content">
+      <!-- Sidebar content here -->
+      <li>Sidebar Item 1</li>
+      <li>Sidebar Item 2</li>
+    </ul>
+  </div>
+</div>
