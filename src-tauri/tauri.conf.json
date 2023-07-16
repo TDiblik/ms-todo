@@ -1,0 +1,64 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/schema.json",
+  "build": {
+    "beforeBuildCommand": "npm run build",
+    "beforeDevCommand": "npm run dev",
+    "devPath": "http://localhost:5173",
+    "distDir": "../build",
+    "withGlobalTauri": false
+  },
+  "package": {
+    "productName": "Microsoft To Do (Unofficial)",
+    "version": "0.0.1"
+  },
+  "tauri": {
+    "allowlist": {
+      "all": false
+    },
+    "bundle": {
+      "active": true,
+      "publisher": "Tomáš Diblík",
+      "identifier": "ms-todo.tomasdiblik.cz",
+      "category": "Productivity",
+      "shortDescription": "Unofficial cross-platform Microsoft To Do client",
+      "copyright": "Copyright © 2023 Tomáš Diblík. This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.",
+
+      "targets": "all",
+      "icon": ["icons/icon.png", "icons/icon.icns", "icons/icon.ico", "icons/StoreLogo.png"],
+
+      "macOS": {
+        "license": "../LICENSE"
+      },
+      "resources": [],
+      "windows": {
+        "certificateThumbprint": null,
+        "digestAlgorithm": "sha256",
+        "wix": {
+          "language": "en-US",
+          "license": "../LICENSE"
+        }
+      }
+    },
+    "security": {
+      "csp": null
+    },
+    "updater": {
+      "active": false
+    },
+    "windows": [
+      {
+        "title": "Microsoft To Do (Unofficial)",
+        "theme": "Dark",
+
+        "fullscreen": false,
+        "resizable": true,
+        "maximized": false,
+        "focus": true,
+        "decorations": true,
+
+        "width": 750,
+        "height": 650
+      }
+    ]
+  }
+}
