@@ -155,16 +155,14 @@ fn main() {
                         .get("https://graph.microsoft.com/v1.0/me/photo/$value")
                         .header("Authorization", format!("Bearer {}", token.access_token)).send() 
                         {
-                            if let Some(content_type) = resp.headers().clone().get("content-type") {
-                                if let Ok(content_type) = content_type.to_str() {
-                                    if let Ok(bytes) = resp.bytes() {
-                                        user_profile_picture = Some(
-                                            format!("data:{};base64,{}",
-                                                content_type,
-                                                base64::engine::general_purpose::STANDARD.encode(bytes)
-                                            )
-                                        );
-                                    }
+                            if let Some(content_type) = resp.headers().clone().get("content-type").and_then(|s| s.to_str().ok()) {
+                                if let Ok(bytes) = resp.bytes() {
+                                    user_profile_picture = Some(
+                                        format!("data:{};base64,{}",
+                                            content_type,
+                                            base64::engine::general_purpose::STANDARD.encode(bytes)
+                                        )
+                                    );
                                 }
                             }
                         }
