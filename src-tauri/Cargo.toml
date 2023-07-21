@@ -16,6 +16,7 @@ lto = true
 tauri-build = { version = "1.4", features = [] }
 
 [dependencies]
+tokio = "1.29.1"
 tauri = { version = "1.4", features = ["shell-open"] }
 tauri-plugin-deep-link = "0.1.1"
 

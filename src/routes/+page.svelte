@@ -2,8 +2,8 @@
   import {goto} from "$app/navigation";
   import {invoke} from "@tauri-apps/api/tauri";
   import {onMount} from "svelte";
-  import {current_user_account} from "./app/user_account_store";
-  import {MessageType, push_new_message} from "./toast_store";
+  import {current_user_account} from "../stores/user_account_store";
+  import {MessageType, push_new_message} from "../stores/toast_store";
   import type {Config} from "../utils/models";
 
   onMount(async () => {

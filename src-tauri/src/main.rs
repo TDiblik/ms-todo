@@ -27,6 +27,9 @@ fn main() {
 
     tauri::Builder::default()
         // Handle auth
+        // This part of code does not use CommandResult<T> because it was written before CommandResult<T> was implemented.
+        // It works, and changes are there will never be need to touch this ever again, 
+        // plus it's kinda isolated from rest of the app, I didn't bothered with rewriting it for these reason.
         .setup(|app| {
             let handle = app.handle();
             tauri_plugin_deep_link::register(
@@ -196,7 +199,8 @@ fn main() {
             commands::initial_check, 
             commands::get_config, 
             commands::login_manual, 
-            commands::logout
+            commands::logout,
+            commands::get_task_lists
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -9,3 +9,10 @@ pub const AZURE_OAUTH_STATE: &str = "12345";
 pub const AZURE_OAUTH_DEEP_LINK_NAME: &str = "ms-todo-unofficial-tomasdiblik-cz";
 pub const AZURE_OAUTH_SCHEMA_NAME: &str = "://auth/";
 pub const AZURE_OAUTH_REDIRECT_URI: &str = "ms-todo-unofficial-tomasdiblik-cz://auth/";
+
+pub const MICROSOFT_GRAPH_API_URL: &str = "https://graph.microsoft.com/v1.0/";
+// pub const MICROSOFT_GRAPH_BETA_API_URL: &str = "https://graph.microsoft.com/beta/";
+
+pub fn graph_api_query(endpoint: &str) -> String {
+    format!("{MICROSOFT_GRAPH_API_URL}{endpoint}")
+}

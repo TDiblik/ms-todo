@@ -5,7 +5,7 @@
   import PlusIcon from "../../utils/PlusIcon.svelte";
   import SunIcon from "../../utils/SunIcon.svelte";
   import SidebarItem from "./SidebarItem.svelte";
-  import {current_user_account} from "./user_account_store";
+  import {current_user_account} from "../../stores/user_account_store";
 
   const base_li_classes = "ml-2 mr-2";
 </script>

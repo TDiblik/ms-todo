@@ -12,3 +12,9 @@ export interface UserAccount {
   refresh_token: string;
   profile_photo: string | undefined;
 }
+
+export interface TaskList {
+  id: string;
+  display_name: string;
+  well_known_list_name: string; // TODO: enum, just too lazy atm https://learn.microsoft.com/en-us/graph/api/resources/todotasklist?view=graph-rest-1.0
+}

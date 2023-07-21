@@ -1,5 +1,5 @@
 import {writable} from "svelte/store";
-import type {UserAccount} from "../../utils/models";
+import type {UserAccount} from "../utils/models";
 
 // In release version, the following code doesn't really matter, since the workflow loads data from config file every time the it starts
 // and overwrites the localstorage, however during development, when hot-reloading, svelte stores get wiped, and I needed a way

@@ -1,5 +1,6 @@
 <script lang="ts">
-  import {MessageType, push_new_message} from "../toast_store";
+  import {fetch_tasks_lists} from "../../stores/tasks_lists_store";
+  import {MessageType, push_new_message} from "../../stores/toast_store";
   import Sidebar from "./Sidebar.svelte";
 </script>
 
@@ -21,6 +22,11 @@
       on:click={() => {
         push_new_message(MessageType.error, "CCC");
       }}>err</button
+    >
+    <button
+      on:click={() => {
+        fetch_tasks_lists();
+      }}>fetch :)</button
     >
     <a href="/login">logout</a>
 

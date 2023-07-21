@@ -1,5 +1,5 @@
 <script lang="ts">
-  import {remove_message, toast_messages, type Message} from "./toast_store";
+  import {remove_message, toast_messages, type Message} from "../stores/toast_store";
 
   toast_messages.subscribe((v) => {
     if (v.length != 0) {
@@ -12,7 +12,7 @@
 
 <div class="toast toast-top toast-end">
   {#each $toast_messages as toast_message}
-    <div class={`alert alert-${toast_message.type}`}>
+    <div class={`alert alert-${toast_message.type} text-sm`}>
       <span>{toast_message.message}</span>
       <button
         on:click={() => {

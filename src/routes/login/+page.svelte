@@ -5,7 +5,7 @@
   import {listen, once} from "@tauri-apps/api/event";
   import {goto} from "$app/navigation";
   import type {Config} from "../../utils/models";
-  import {MessageType, push_new_message} from "../toast_store";
+  import {MessageType, push_new_message} from "../../stores/toast_store";
 
   let login_url = "";
   let config: Config | null = null;

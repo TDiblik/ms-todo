@@ -2,6 +2,7 @@ use std::collections::HashMap;
 
 use chrono::{DateTime, Duration, Local};
 use serde::Deserialize;
+use tauri::async_runtime;
 
 use crate::{
     config::{get_config, save_config},
@@ -33,6 +34,17 @@ pub fn gen_new_expiration_datetime(expires_in: u32) -> DateTime<Local> {
     chrono::Local::now() + Duration::seconds(expires_in.into())
 }
 
+// Since you cannot spawn blocking reqwest in async context by default,
+// use this wrapper inside async method
+pub async fn get_current_access_token_async() -> String {
+    tokio::task::spawn_blocking(get_current_access_token)
+        .await
+        .unwrap() // safe to unwrap, because if this fails, whole tokio runtime is fucked
+}
+
+// Purpusefully not async, since we want to wait for access token request when invalid,
+// if I were to implement this asynchronously, once the access token expires,
+// there will be like 10 places asking for it at the same time
 pub fn get_current_access_token() -> String {
     let current_token = unsafe { CURRENT_ACCESS_TOKEN.clone() };
     match current_token {
