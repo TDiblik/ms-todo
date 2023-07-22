@@ -6,6 +6,7 @@
   import SunIcon from "../../utils/SunIcon.svelte";
   import SidebarItem from "./SidebarItem.svelte";
   import {current_user_account} from "../../stores/user_account_store";
+  import {sidebar_task_lists} from "../../stores/tasks_lists_store";
 
   const base_li_classes = "ml-2 mr-2";
 </script>
@@ -35,8 +36,16 @@
 
   <!--TODO: Implement groups, microsoft graph api does not return them atm, so either make my own implementaiton or wait for microsfot to implement it ----- Example groups using DaisyUI: https://daisyui.com/components/menu/#collapsible-submenu -->
   <ul class="menu bg-base-200 min-w-56 rounded-box pt-0 pb-0">
-    <SidebarItem icon={ListIcon} title="AAAA" number_of_tasks={4} on_click={() => {}} />
-    <SidebarItem icon={ListIcon} title="Things to listen to in free time" number_of_tasks={9} on_click={() => {}} />
+    {#each $sidebar_task_lists as task_list}
+      <SidebarItem
+        icon={ListIcon}
+        title={task_list.displayName}
+        number_of_tasks={69}
+        on_click={() => {
+          console.log(task_list.id);
+        }}
+      />
+    {/each}
   </ul>
 
   <div class="mt-auto">

@@ -1,7 +1,12 @@
 <script lang="ts">
+  import {onMount} from "svelte";
   import {fetch_tasks_lists} from "../../stores/tasks_lists_store";
   import {MessageType, push_new_message} from "../../stores/toast_store";
   import Sidebar from "./Sidebar.svelte";
+
+  onMount(async () => {
+    await fetch_tasks_lists();
+  });
 </script>
 
 <div class="drawer md:drawer-open">

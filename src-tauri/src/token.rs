@@ -2,7 +2,6 @@ use std::collections::HashMap;
 
 use chrono::{DateTime, Duration, Local};
 use serde::Deserialize;
-use tauri::async_runtime;
 
 use crate::{
     config::{get_config, save_config},

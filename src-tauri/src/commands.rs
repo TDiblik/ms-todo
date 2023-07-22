@@ -6,8 +6,7 @@ use crate::{
         graph_api_query, AZURE_OAUTH_CLIENT_ID, AZURE_OAUTH_REDIRECT_URI, AZURE_OAUTH_SCOPE,
         AZURE_OAUTH_STATE, AZURE_OAUTH_TENANT,
     },
-    token::get_current_access_token,
-    utils::{authed_req, authed_req_async}, models::{CommandResult, TaskListsGraphResponse, TaskLists},
+    utils::authed_req_async, models::{CommandResult, TaskListsGraphResponse, TaskList},
 };
 
 #[tauri::command]
@@ -59,7 +58,7 @@ pub fn logout() {
 }
 
 #[tauri::command]
-pub async fn get_task_lists() -> CommandResult<Vec<TaskLists>> {
+pub async fn get_task_lists() -> CommandResult<Vec<TaskList>> {
     let Ok(task_lists) = authed_req_async(Method::GET, graph_api_query("me/todo/lists")).await
         .send()
         .await 

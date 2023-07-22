@@ -2,7 +2,7 @@
   import {goto} from "$app/navigation";
   import {invoke} from "@tauri-apps/api/tauri";
   import {onMount} from "svelte";
-  import {current_user_account} from "../stores/user_account_store";
+  import {set_current_user_account} from "../stores/user_account_store";
   import {MessageType, push_new_message} from "../stores/toast_store";
   import type {Config} from "../utils/models";
 
@@ -21,7 +21,7 @@
     }
 
     const config: Config = await invoke("get_config");
-    current_user_account.set(config.user_accounts.find((s) => s.id == config.active_user_account_id)!);
+    set_current_user_account(config.user_accounts.find((s) => s.id == config.active_user_account_id)!);
     goto("/app");
   });
 </script>

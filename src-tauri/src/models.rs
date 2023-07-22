@@ -38,14 +38,14 @@ pub struct UserInfoGraphResponse {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct TaskListsGraphResponse {
-    pub value: Vec<TaskLists>,
+    pub value: Vec<TaskList>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct TaskLists {
+pub struct TaskList {
     pub id: String,
     #[serde(rename = "displayName")]
     pub display_name: String,
     #[serde(rename = "wellknownListName")]
-    pub well_known_list_name: String, // todo: enum, but I'm too lazy now
+    pub well_known_list_name: String,
 }

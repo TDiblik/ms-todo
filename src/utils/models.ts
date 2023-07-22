@@ -13,8 +13,16 @@ export interface UserAccount {
   profile_photo: string | undefined;
 }
 
+export type WellknownListName = "none" | "defaultList" | "flaggedEmails" | "unknownFutureValue";
+
+export interface CommandResult<T> {
+  success: boolean;
+  err_message: string | null;
+  result: T | null;
+}
+
 export interface TaskList {
   id: string;
-  display_name: string;
-  well_known_list_name: string; // TODO: enum, just too lazy atm https://learn.microsoft.com/en-us/graph/api/resources/todotasklist?view=graph-rest-1.0
+  displayName: string;
+  wellknownListName: WellknownListName;
 }
