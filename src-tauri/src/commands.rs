@@ -59,8 +59,9 @@ pub fn logout() {
     config::save_config(&new_config);
 }
 
+type GetTaskListsResponse = CommandResult<Vec<TaskList>>;
 #[tauri::command]
-pub async fn get_task_lists() -> CommandResult<Vec<TaskList>> {
+pub async fn get_task_lists() -> GetTaskListsResponse {
     let Ok(task_lists) = authed_req_async(Method::GET, graph_api_query("me/todo/lists")).await
         .send()
         .await 
@@ -77,19 +78,29 @@ pub async fn get_task_lists() -> CommandResult<Vec<TaskList>> {
         return CommandResult::new_err("Unable to parse task_lists");
     };
 
+    let mut new_config = get_config();
+    let mut user_acc = new_config.get_current_user();
+    user_acc.task_lists = task_lists.value.clone();
+    config::save_config(&new_config);
+
     CommandResult::new_success(task_lists.value)
 }
-
 #[tauri::command]
-pub async fn get_tasks_by_list_ids(ids: Vec<String>) -> CommandResult<HashMap<String, Vec<Task>>> {
-    // This is how to implement it in parrallel. 
-    // For some reason, Microsoft returns status code 429 every time I make more than one request at a time. 
-    // Could be usefull in the future
-    // TODO: Check after like a month, check whether TODO service limits changed (https://learn.microsoft.com/en-us/graph/throttling-limits#tasks-and-plans-service-limits)
+pub async fn get_task_lists_cached() -> GetTaskListsResponse {
+    CommandResult::new_success(
+        get_config()
+        .get_current_user()
+        .task_lists
+        .clone()
+    )
+}
 
+type GetTasksResponse = CommandResult<HashMap<String, Vec<Task>>> ;
+#[tauri::command]
+pub async fn get_tasks_by_list_ids(ids: Vec<String>) -> GetTasksResponse {
+    // TODO: Check after like three months, check whether TODO service limits changed (https://learn.microsoft.com/en-us/graph/throttling-limits#tasks-and-plans-service-limits) --- This is how to implement it in parrallel. For some reason, Microsoft returns status code 429 every time I make more than one request at a time. Once To Do service limits stabilize, switch to the commented-out implementation for X times faster cache refresh.
     // let mut task_requests = vec![];
     // for id in ids {
-    //     // if you have more than 100 thousand TODO tasks, you're an insane person.
     //     task_requests.push(
     //         authed_req_async(Method::GET, graph_api_query(format!("me/todo/lists/{}/tasks?$top=99999", id).as_str())).await
     //             .send()
@@ -97,7 +108,6 @@ pub async fn get_tasks_by_list_ids(ids: Vec<String>) -> CommandResult<HashMap<St
     //     );
     // }
     // let finished_task_requests: Vec<Result<(String, reqwest::Response), reqwest::Error>>  = futures::future::join_all(task_requests).await;
-    
     // let mut tasks_map: TasksMap = TasksMap::new();
     // for request_result in finished_task_requests {
     //     let Ok(tasks) = request_result else {
@@ -146,9 +156,8 @@ pub async fn get_tasks_by_list_ids(ids: Vec<String>) -> CommandResult<HashMap<St
 
     CommandResult::new_success(tasks_map)
 }
-
 #[tauri::command]
-pub async fn get_tasks_by_list_ids_cached(ids: Vec<String>) -> CommandResult<HashMap<String, Vec<Task>>> {
+pub async fn get_tasks_by_list_ids_cached(ids: Vec<String>) -> GetTasksResponse {
     CommandResult::new_success(
         get_config()
         .get_current_user()

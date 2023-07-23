@@ -55,7 +55,7 @@ pub struct TaskListsGraphResponse {
     pub value: Vec<TaskList>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct TaskList {
     pub id: String,
     #[serde(rename = "displayName")]

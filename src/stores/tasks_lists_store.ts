@@ -4,8 +4,9 @@ import {invoke} from "@tauri-apps/api/tauri";
 import {MessageType, push_new_message} from "./toast_store";
 
 export const task_lists = writable<TaskList[]>([]);
-export async function fetch_tasks_lists() {
-  let new_task_lists = (await invoke("get_task_lists")) as CommandResult<TaskList[]>;
+export async function fetch_tasks_lists(refresh_cache: boolean) {
+  const function_to_call = refresh_cache ? "get_task_lists" : "get_task_lists_cached";
+  const new_task_lists = (await invoke(function_to_call)) as CommandResult<TaskList[]>;
   if (!new_task_lists.success) {
     push_new_message(MessageType.error, new_task_lists.err_message!);
   }

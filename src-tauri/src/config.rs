@@ -8,7 +8,7 @@ use chrono::{DateTime, Local};
 use serde::{Deserialize, Serialize};
 use tauri::api::path::home_dir;
 
-use crate::models::TasksMap;
+use crate::models::{TaskList, TasksMap};
 
 #[derive(Debug, Serialize, Deserialize, Default, Clone)]
 pub struct Config {
@@ -33,6 +33,7 @@ pub struct UserAccount {
     pub access_token_expires_at: DateTime<Local>,
     pub refresh_token: String,
     pub profile_photo: Option<String>,
+    pub task_lists: Vec<TaskList>,
     pub tasks: TasksMap,
 }
 

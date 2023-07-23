@@ -3,12 +3,13 @@
   import {fetch_tasks_lists, task_lists} from "../../stores/tasks_lists_store";
   import {MessageType, push_new_message} from "../../stores/toast_store";
   import Sidebar from "./Sidebar.svelte";
-  import {fetch_tasks_by_list_ids, tasks} from "../../stores/tasks_store";
+  import {fetch_tasks_by_list_ids} from "../../stores/tasks_store";
 
   let is_loading = true;
   onMount(async () => {
     // Calls needed for successfull load
-    await fetch_tasks_lists();
+    push_new_message(MessageType.info, "Load beginning.");
+    await fetch_tasks_lists(false);
     await fetch_tasks_by_list_ids(
       $task_lists.map((s) => s.id),
       false
@@ -17,10 +18,13 @@
 
     // Refresh local cache
     push_new_message(MessageType.info, "Loading done, refreshing local cache....");
+    await fetch_tasks_lists(true);
     await fetch_tasks_by_list_ids(
       $task_lists.map((s) => s.id),
       true
     );
+
+    push_new_message(MessageType.info, "Local cache refreshed.");
   });
 </script>
 
@@ -48,8 +52,13 @@
       >
       <button
         on:click={() => {
-          fetch_tasks_lists();
-        }}>fetch :)</button
+          fetch_tasks_lists(true);
+        }}>fetch false :)</button
+      >
+      <button
+        on:click={() => {
+          fetch_tasks_lists(true);
+        }}>fetch true :)</button
       >
       <a href="/login">logout</a>
 

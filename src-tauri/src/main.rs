@@ -184,6 +184,7 @@ fn main() {
                         refresh_token: token.refresh_token,
                         profile_photo: user_profile_picture,
                         tasks: TasksMap::new(),
+                        task_lists: vec![]
                     };
                     config.active_user_account_id = new_user_account.id.clone();
                     config.user_accounts.push(new_user_account);
@@ -203,6 +204,7 @@ fn main() {
             commands::login_manual, 
             commands::logout,
             commands::get_task_lists,
+            commands::get_task_lists_cached,
             commands::get_tasks_by_list_ids,
             commands::get_tasks_by_list_ids_cached
         ])
