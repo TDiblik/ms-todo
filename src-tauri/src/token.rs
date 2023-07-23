@@ -26,7 +26,7 @@ pub struct CurrentAccessToken {
 static mut CURRENT_ACCESS_TOKEN: Option<CurrentAccessToken> = None;
 
 fn token_is_valid(token: &CurrentAccessToken) -> bool {
-    (token.expires_at.time() - chrono::Local::now().time()).num_seconds() > 0
+    (token.expires_at - chrono::Local::now()).num_seconds() > 0
 }
 
 pub fn gen_new_expiration_datetime(expires_in: u32) -> DateTime<Local> {
