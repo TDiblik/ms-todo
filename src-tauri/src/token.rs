@@ -49,7 +49,7 @@ pub fn get_current_access_token() -> String {
     match current_token {
         Some(token) if token_is_valid(&token) => token.token,
         _ => {
-            let config = get_config();
+            let mut config = get_config();
             let current_user = config.get_current_user();
             let new_token = CurrentAccessToken {
                 expires_at: current_user.access_token_expires_at,

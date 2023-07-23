@@ -13,6 +13,7 @@ use std::collections::HashMap;
 use base64::Engine;
 use config::save_config;
 use constants::AZURE_OAUTH_DEEP_LINK_NAME;
+use models::TasksMap;
 use tauri::Manager;
 
 use crate::{
@@ -182,6 +183,7 @@ fn main() {
                         access_token_expires_at: gen_new_expiration_datetime(token.expires_in),
                         refresh_token: token.refresh_token,
                         profile_photo: user_profile_picture,
+                        tasks: TasksMap::new(),
                     };
                     config.active_user_account_id = new_user_account.id.clone();
                     config.user_accounts.push(new_user_account);
@@ -200,7 +202,9 @@ fn main() {
             commands::get_config, 
             commands::login_manual, 
             commands::logout,
-            commands::get_task_lists
+            commands::get_task_lists,
+            commands::get_tasks_by_list_ids,
+            commands::get_tasks_by_list_ids_cached
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

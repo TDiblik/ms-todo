@@ -8,15 +8,17 @@ use chrono::{DateTime, Local};
 use serde::{Deserialize, Serialize};
 use tauri::api::path::home_dir;
 
+use crate::models::TasksMap;
+
 #[derive(Debug, Serialize, Deserialize, Default, Clone)]
 pub struct Config {
     pub active_user_account_id: String, // Must always (after initial check) include valid user account id from user_accounts vector. Empty means user wants to change account.
     pub user_accounts: Vec<UserAccount>,
 }
 impl Config {
-    pub fn get_current_user(&self) -> &UserAccount {
+    pub fn get_current_user(&mut self) -> &mut UserAccount {
         self.user_accounts
-            .iter()
+            .iter_mut()
             .find(|s| s.id == self.active_user_account_id)
             .unwrap()
     }
@@ -31,6 +33,7 @@ pub struct UserAccount {
     pub access_token_expires_at: DateTime<Local>,
     pub refresh_token: String,
     pub profile_photo: Option<String>,
+    pub tasks: TasksMap,
 }
 
 fn get_config_dir_path() -> PathBuf {

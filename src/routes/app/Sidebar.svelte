@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import CalendarIcon from "../../utils/CalendarIcon.svelte";
   import HouseIcon from "../../utils/HouseIcon.svelte";
   import ListIcon from "../../utils/ListIcon.svelte";
@@ -7,8 +7,12 @@
   import SidebarItem from "./SidebarItem.svelte";
   import {current_user_account} from "../../stores/user_account_store";
   import {sidebar_task_lists} from "../../stores/tasks_lists_store";
+  import {UNKNOW_NUMBER_OF_TASKS, tasks} from "../../stores/tasks_store";
+  import {count_elements_not_equal, nameof} from "../../utils/generic";
+  import type {Task} from "../../utils/models";
 
   const base_li_classes = "ml-2 mr-2";
+  const status_property_name = nameof<Task>("status");
 </script>
 
 <ul class="menu p-4 w-70 min-h-full bg-base-200 text-base-content">
@@ -34,15 +38,18 @@
   <!-- Acts as a divider. More details at daisyui docs. -->
   <li />
 
+  <!-- number_of_tasks={$tasks[task_list.id]?.length ?? UNKNOW_NUMBER_OF_TASKS} -->
   <!--TODO: Implement groups, microsoft graph api does not return them atm, so either make my own implementaiton or wait for microsfot to implement it ----- Example groups using DaisyUI: https://daisyui.com/components/menu/#collapsible-submenu -->
   <ul class="menu bg-base-200 min-w-56 rounded-box pt-0 pb-0">
     {#each $sidebar_task_lists as task_list}
       <SidebarItem
         icon={ListIcon}
         title={task_list.displayName}
-        number_of_tasks={69}
+        number_of_tasks={$tasks[task_list.id] != null
+          ? count_elements_not_equal($tasks[task_list.id], status_property_name, "completed")
+          : UNKNOW_NUMBER_OF_TASKS}
         on_click={() => {
-          console.log(task_list.id);
+          console.log($tasks[task_list.id]);
         }}
       />
     {/each}

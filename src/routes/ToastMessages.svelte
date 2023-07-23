@@ -5,7 +5,7 @@
     if (v.length != 0) {
       setTimeout(() => {
         remove_message(v[v.length - 1].id);
-      }, 7500);
+      }, 5000);
     }
   });
 </script>
