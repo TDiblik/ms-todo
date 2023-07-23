@@ -7,9 +7,7 @@
   export let on_click: () => void;
 
   const MAX_TITLE_LENGTH = 30;
-  if (title.length > MAX_TITLE_LENGTH) {
-    title = title.substring(0, MAX_TITLE_LENGTH) + "...";
-  }
+  $: title = title.length > MAX_TITLE_LENGTH ? (title = title.substring(0, MAX_TITLE_LENGTH) + "...") : title;
 </script>
 
 <button on:click={() => on_click()}>

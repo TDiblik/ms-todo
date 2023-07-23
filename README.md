@@ -13,6 +13,7 @@
 - Implement task search
 - Implement ability to change task lists order by dragging (and keep the order in config)
 - Implement task groups
+- Ability to work offline
 - Remove the ugly af native taskbar
   - https://tauri.app/v1/guides/features/window-customization/
   - https://github.com/tauri-apps/tauri/tree/dev/examples/api

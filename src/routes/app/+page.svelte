@@ -6,6 +6,8 @@
 
   onMount(async () => {
     await fetch_tasks_lists();
+    console.log("aůlsej");
+    // await fetch_tasks();
   });
 </script>
 
