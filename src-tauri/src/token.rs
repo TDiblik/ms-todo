@@ -104,7 +104,6 @@ pub fn get_current_access_token() -> String {
                 .unwrap();
             user_to_edit.access_token = new_token.token;
             user_to_edit.access_token_expires_at = new_token.expires_at;
-            println!("{:?}", new_config);
             save_config(&new_config);
 
             new_token_raw

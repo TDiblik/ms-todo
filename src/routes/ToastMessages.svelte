@@ -15,6 +15,7 @@
     <div class={`alert alert-${toast_message.type} text-sm`}>
       <span>{toast_message.message}</span>
       <button
+        class="ml-auto"
         on:click={() => {
           remove_message(toast_message.id);
         }}

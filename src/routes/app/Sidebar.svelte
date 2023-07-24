@@ -8,22 +8,76 @@
   import {current_user_account} from "../../stores/user_account_store";
   import {sidebar_task_lists} from "../../stores/tasks_lists_store";
   import {UNKNOW_NUMBER_OF_TASKS, tasks} from "../../stores/tasks_store";
-  import {count_elements_not_equal, nameof} from "../../utils/generic";
+  import {count_elements_not_equal, nameof, refresh_local_cache} from "../../utils/generic";
   import type {Task} from "../../utils/models";
+  import SidebarSettingsPopupItem from "./SidebarSettingsPopupItem.svelte";
+  import {MessageType, push_new_message} from "../../stores/toast_store";
+  import {invoke} from "@tauri-apps/api/tauri";
+  import {goto} from "$app/navigation";
+  import {current_config} from "../../stores/config_store";
+  import SettingsIcon from "../../utils/SettingsIcon.svelte";
+  import SynchronizationIcon from "../../utils/SynchronizationIcon.svelte";
+  import LogoutIcon from "../../utils/LogoutIcon.svelte";
 
   const base_li_classes = "ml-2 mr-2";
   const status_property_name = nameof<Task>("status");
 </script>
 
+<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 <ul class="menu p-4 w-70 min-h-full bg-base-200 text-base-content">
-  <li>
-    <button class="h-14 mb-2 mr-auto ml-auto w-full md:w-auto flex">
+  <li class="dropdown dorpdown-bottom">
+    <button class="h-14 mb-2 mr-auto ml-auto w-full flex">
       <img class="h-12 rounded-full" src={$current_user_account.profile_photo} alt="Account's profile pic" />
       <div class="ml-2 mr-2">
         <p class="text-base font-medium">{$current_user_account.display_name}</p>
         <p class="text-sm font-thin">{$current_user_account.mail}</p>
       </div>
     </button>
+    <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box">
+      <SidebarSettingsPopupItem
+        title="Settings"
+        icon={SettingsIcon}
+        on_click={() => {
+          push_new_message(MessageType.info, "Comming soon :D");
+        }}
+      />
+      <SidebarSettingsPopupItem
+        title="Force sync"
+        icon={SynchronizationIcon}
+        on_click={() => {
+          refresh_local_cache();
+        }}
+      />
+      <SidebarSettingsPopupItem
+        title="Logout"
+        icon={LogoutIcon}
+        on_click={async () => {
+          await invoke("logout");
+          goto("/login");
+        }}
+      />
+      <li />
+      {#each $current_config.user_accounts as user_account}
+        <button
+          class={"btn h-16 w-full flex " +
+            (user_account.id == $current_user_account.id
+              ? "bg-primary bg-opacity-30 hover:bg-opacity-50 hover:bg-primary"
+              : "")}
+          title={user_account.id}
+          on:click={async () => {
+            await invoke("logout");
+            await invoke("login_manual", {userId: user_account.id});
+            goto("/"); // send to "/", just to make sure and run all checks
+          }}
+        >
+          <img class="h-9 rounded-full" src={user_account.profile_photo} alt="Account's profile pic" />
+          <div class="ml-2 text-left">
+            <p class="text-sm font-medium text-slate-300">{user_account.display_name}</p>
+            <p class="text-sm font-thin text-slate-300 lowercase">{user_account.mail}</p>
+          </div>
+        </button>
+      {/each}
+    </ul>
   </li>
   <li class={base_li_classes}>
     <input type="text" placeholder="Search" class="input input-bordered input-sm" />
@@ -35,7 +89,7 @@
     <SidebarItem icon={HouseIcon} title="Tasks" number_of_tasks={3} on_click={() => {}} />
   </ul>
 
-  <!-- Acts as a divider. More details at daisyui docs. -->
+  <!-- Acts as a divider. More details in daisyui docs. -->
   <li />
 
   <!-- number_of_tasks={$tasks[task_list.id]?.length ?? UNKNOW_NUMBER_OF_TASKS} -->
@@ -56,7 +110,7 @@
   </ul>
 
   <div class="mt-auto">
-    <!-- Acts as a divider. More details at daisyui docs. -->
+    <!-- Acts as a divider. More details in daisyui docs. -->
     <li />
 
     <li class={base_li_classes}>

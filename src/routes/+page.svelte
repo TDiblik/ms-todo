@@ -5,6 +5,7 @@
   import {set_current_user_account} from "../stores/user_account_store";
   import {MessageType, push_new_message} from "../stores/toast_store";
   import type {Config} from "../utils/models";
+  import {set_current_config} from "../stores/config_store";
 
   onMount(async () => {
     const result = await invoke("initial_check");
@@ -21,9 +22,10 @@
     }
 
     const config: Config = await invoke("get_config");
+    set_current_config(config);
     set_current_user_account(config.user_accounts.find((s) => s.id == config.active_user_account_id)!);
     goto("/app");
   });
 </script>
 
-<p>Loading....</p>
+<p>Loading Part1....</p>

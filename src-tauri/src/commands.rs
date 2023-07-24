@@ -6,7 +6,7 @@ use crate::{
     config,
     constants::{
         graph_api_query, AZURE_OAUTH_CLIENT_ID, AZURE_OAUTH_REDIRECT_URI, AZURE_OAUTH_SCOPE,
-        AZURE_OAUTH_STATE, AZURE_OAUTH_TENANT,
+        AZURE_OAUTH_STATE, AZURE_OAUTH_TENANT, TOP_N_TASKS_TO_FETCH
     },
     utils::authed_req_async, models::{CommandResult, TaskListsGraphResponse, TaskList, Task, TaskGraphResponse, TasksMap},
 };
@@ -102,7 +102,7 @@ pub async fn get_tasks_by_list_ids(ids: Vec<String>) -> GetTasksResponse {
     // let mut task_requests = vec![];
     // for id in ids {
     //     task_requests.push(
-    //         authed_req_async(Method::GET, graph_api_query(format!("me/todo/lists/{}/tasks?$top=99999", id).as_str())).await
+    //         authed_req_async(Method::GET, graph_api_query(format!("me/todo/lists/{}/tasks?$top={TOP_N_TASKS_TO_FETCH}", id).as_str())).await
     //             .send()
     //             .and_then(|s| async move { Ok((id, s)) })
     //     );
@@ -115,7 +115,6 @@ pub async fn get_tasks_by_list_ids(ids: Vec<String>) -> GetTasksResponse {
     //     };
     //     let list_id = tasks.0;
     //     if tasks.1.status() != 200 {
-    //         dbg!(&tasks.1);
     //         return CommandResult::new_err(format!("Task retrieval for list {list_id} return status other than 200.").as_str());
     //     }
     //     let Ok(tasks) = tasks.1.text().await else {
@@ -129,7 +128,7 @@ pub async fn get_tasks_by_list_ids(ids: Vec<String>) -> GetTasksResponse {
 
     let mut tasks_map: TasksMap = TasksMap::new();
     for id in ids {
-        let Ok(tasks) = authed_req_async(Method::GET, graph_api_query(format!("me/todo/lists/{}/tasks?$top=99999", id).as_str()))
+        let Ok(tasks) = authed_req_async(Method::GET, graph_api_query(format!("me/todo/lists/{id}/tasks?$top={TOP_N_TASKS_TO_FETCH}").as_str()))
             .await
             .send()
             .await 

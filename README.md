@@ -14,6 +14,7 @@
 - Implement ability to change task lists order by dragging (and keep the order in config)
 - Implement task groups
 - Ability to work offline
+- Ability to sync using "delta system" (https://learn.microsoft.com/en-us/graph/api/todotasklist-delta)
 - Remove the ugly af native taskbar
   - https://tauri.app/v1/guides/features/window-customization/
   - https://github.com/tauri-apps/tauri/tree/dev/examples/api

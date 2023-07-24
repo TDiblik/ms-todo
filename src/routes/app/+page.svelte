@@ -4,32 +4,27 @@
   import {MessageType, push_new_message} from "../../stores/toast_store";
   import Sidebar from "./Sidebar.svelte";
   import {fetch_tasks_by_list_ids} from "../../stores/tasks_store";
+  import {refresh_local_cache} from "../../utils/generic";
 
   let is_loading = true;
   onMount(async () => {
     // Calls needed for successfull load
-    push_new_message(MessageType.info, "Load beginning.");
+    push_new_message(MessageType.info, "Load beginning...");
     await fetch_tasks_lists(false);
     await fetch_tasks_by_list_ids(
       $task_lists.map((s) => s.id),
       false
     );
     is_loading = false;
+    push_new_message(MessageType.info, "Finished base load");
 
-    // Refresh local cache
-    push_new_message(MessageType.info, "Loading done, refreshing local cache....");
-    await fetch_tasks_lists(true);
-    await fetch_tasks_by_list_ids(
-      $task_lists.map((s) => s.id),
-      true
-    );
-
-    push_new_message(MessageType.info, "Local cache refreshed.");
+    // Calls that can run in the background
+    await refresh_local_cache();
   });
 </script>
 
 {#if is_loading}
-  <p>Loading :)</p>
+  <p>Loading :) - TODO: Replace with some kind of spinner</p>
 {:else}
   <div class="drawer md:drawer-open">
     <input id="sidebar" type="checkbox" class="drawer-toggle" />
